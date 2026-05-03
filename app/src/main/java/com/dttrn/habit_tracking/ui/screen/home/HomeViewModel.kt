@@ -40,7 +40,7 @@ class HomeViewModel @Inject constructor(
         observeHabits()
     }
 
-    private fun observeHabits() {
+    fun observeHabits() {
         viewModelScope.launch {
             repository.getAllActiveHabits().collect { habits ->
                 refreshHabitsState(habits)
