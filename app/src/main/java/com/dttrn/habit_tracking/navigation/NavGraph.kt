@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.dttrn.habit_tracking.ui.screen.add_edit.AddEditScreen
 import com.dttrn.habit_tracking.ui.screen.detail.DetailScreen
 import com.dttrn.habit_tracking.ui.screen.home.HomeScreen
+import com.dttrn.habit_tracking.ui.screen.notification.ReminderScreen
 import com.dttrn.habit_tracking.ui.screen.settings.SettingsScreen
 import com.dttrn.habit_tracking.ui.screen.statistics.StatisticsScreen
 
@@ -72,8 +73,13 @@ fun HabitNavGraph(navController: NavHostController) {
 
         composable(Screen.Settings.route) {
             SettingsScreen(
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateNotification={navController.navigate(Screen.Reminder.route)}
             )
+        }
+
+        composable(Screen.Reminder.route) {
+            ReminderScreen()
         }
     }
 }

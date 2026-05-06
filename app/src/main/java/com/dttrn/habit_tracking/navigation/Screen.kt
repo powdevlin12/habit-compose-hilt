@@ -11,4 +11,6 @@ sealed class Screen(val route: String) {
     }
     data object Statistics : Screen("statistics")
     data object Settings : Screen("settings")
+
+    data object Reminder : Screen("reminder_screen")
 }

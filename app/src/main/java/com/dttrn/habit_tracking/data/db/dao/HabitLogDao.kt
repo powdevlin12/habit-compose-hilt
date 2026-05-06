@@ -49,6 +49,15 @@ interface HabitLogDao {
 
     @Query("SELECT loggedDate, COUNT(*) as cnt FROM habit_logs WHERE loggedDate >= :startDate GROUP BY loggedDate ORDER BY loggedDate ASC")
     suspend fun getDailyLogCountsFrom(startDate: String): List<DailyCount>
+
+    @Query("SELECT * FROM habit_logs ORDER BY loggedDate DESC")
+    suspend fun getAllLogsOnce(): List<HabitLogEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLogs(logs: List<HabitLogEntity>)
+
+    @Query("DELETE FROM habit_logs")
+    suspend fun deleteAllLogs()
 }
 
 data class DailyCount(val loggedDate: String, val cnt: Int)

@@ -35,6 +35,10 @@
         </activity>
 
         <receiver
+            android:name=".utils.AlarmReceiver"
+            android:exported="false" />
+
+        <receiver
             android:name=".widget.HabitWidgetReceiver"
             android:exported="true">
             <intent-filter>

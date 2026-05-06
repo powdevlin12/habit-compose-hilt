@@ -113,6 +113,21 @@ class HabitRepository @Inject constructor(
     suspend fun isDuplicateName(name: String, excludeId: Int = 0): Boolean =
         habitDao.countByName(name.trim(), excludeId) > 0
 
+    suspend fun getAllHabitsForExport(): List<Habit> =
+        habitDao.getAllHabitsOnce().map { it.toDomain() }
+
+    suspend fun getAllLogsForExport(): List<HabitLogEntity> =
+        habitLogDao.getAllLogsOnce()
+
+    suspend fun restoreFromBackup(habits: List<HabitEntity>, logs: List<HabitLogEntity>) {
+        // Delete logs first (FK constraint), then habits
+        habitLogDao.deleteAllLogs()
+        habitDao.deleteAllHabits()
+        // Insert habits first, then logs (FK dependency)
+        habitDao.insertHabits(habits)
+        habitLogDao.insertLogs(logs)
+    }
+
     // Mapper functions
     private fun HabitEntity.toDomain(): Habit {
         val targetDaysList = targetDays?.let {

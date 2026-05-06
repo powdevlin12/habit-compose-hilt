@@ -44,4 +44,13 @@ interface HabitDao {
 
     @Query("SELECT COUNT(*) FROM habits WHERE isArchived = 0")
     fun getActiveHabitCount(): Flow<Int>
+
+    @Query("SELECT * FROM habits ORDER BY createdAt ASC")
+    suspend fun getAllHabitsOnce(): List<HabitEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertHabits(habits: List<HabitEntity>)
+
+    @Query("DELETE FROM habits")
+    suspend fun deleteAllHabits()
 }
