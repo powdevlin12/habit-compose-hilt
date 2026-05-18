@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.dttrn.habit_tracking.data.repository.HabitRepository
 import com.dttrn.habit_tracking.domain.model.Habit
 import com.dttrn.habit_tracking.domain.model.HabitFrequency
+import com.dttrn.habit_tracking.worker.WorkManagerReminderScheduler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +31,8 @@ data class AddEditUiState(
 
 @HiltViewModel
 class AddEditViewModel @Inject constructor(
-    private val repository: HabitRepository
+    private val repository: HabitRepository,
+    private val reminderScheduler: WorkManagerReminderScheduler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddEditUiState())
@@ -113,11 +115,25 @@ class AddEditViewModel @Inject constructor(
                 reminderTime = if (state.reminderEnabled) state.reminderTime else null
             )
 
-            if (state.habitId == null) {
-                repository.insertHabit(habit)
+            val savedId = if (state.habitId == null) {
+                repository.insertHabit(habit).toInt()
             } else {
                 repository.updateHabit(habit)
+                state.habitId
             }
+
+            // Schedule hoặc cancel WorkManager reminder
+            if (state.reminderEnabled) {
+                reminderScheduler.scheduleReminder(
+                    habitId = savedId,
+                    habitName = habit.name,
+                    habitEmoji = habit.iconEmoji,
+                    reminderTime = state.reminderTime
+                )
+            } else {
+                reminderScheduler.cancelReminder(savedId)
+            }
+
             _uiState.update { it.copy(isSaved = true) }
         }
     }

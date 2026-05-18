@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dttrn.habit_tracking.data.db.entity.HabitEntity
 import com.dttrn.habit_tracking.data.db.entity.HabitLogEntity
+import com.dttrn.habit_tracking.data.preferences.AppTheme
+import com.dttrn.habit_tracking.data.preferences.ThemePreferences
 import com.dttrn.habit_tracking.data.repository.HabitRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +40,8 @@ data class ImportState(
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val repository: HabitRepository
+    private val repository: HabitRepository,
+    private val themePreferences: ThemePreferences
 ) : ViewModel() {
 
     private val _exportState = MutableStateFlow(ExportState())
@@ -46,6 +49,11 @@ class SettingsViewModel @Inject constructor(
 
     private val _importState = MutableStateFlow(ImportState())
     val importState: StateFlow<ImportState> = _importState.asStateFlow()
+
+    /** Expose theme flow từ ThemePreferences */
+    val currentTheme: StateFlow<AppTheme> = themePreferences.theme
+
+    fun setTheme(theme: AppTheme) = themePreferences.setTheme(theme)
 
     fun exportCsvToUri(context: Context, uri: Uri) {
         viewModelScope.launch {

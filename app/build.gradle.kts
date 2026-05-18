@@ -92,6 +92,8 @@ dependencies {
 
     // WorkManager
     implementation(libs.work.runtime.ktx)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.work.compiler)
 
     // Kotlinx Serialization
     implementation(libs.kotlinx.serialization.json)

@@ -45,7 +45,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,10 +55,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
-enum class ThemeMode(val label: String) {
-    LIGHT("Sáng"),
-    DARK("Tối"),
-    SYSTEM("Theo hệ thống")
+import com.dttrn.habit_tracking.data.preferences.AppTheme
+
+// Alias để backward compat với label display
+private fun AppTheme.label() = when (this) {
+    AppTheme.LIGHT -> "Sáng"
+    AppTheme.DARK -> "Tối"
+    AppTheme.SYSTEM -> "Theo hệ thống"
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,8 +74,8 @@ fun SettingsScreen(
     val context = LocalContext.current
     val exportState by viewModel.exportState.collectAsState()
     val importState by viewModel.importState.collectAsState()
+    val selectedTheme by viewModel.currentTheme.collectAsState()
 
-    var selectedTheme by rememberSaveable { mutableStateOf(ThemeMode.SYSTEM) }
     var showThemeDialog by remember { mutableStateOf(false) }
     var showDeleteDataDialog by remember { mutableStateOf(false) }
     var showLanguageDialog by remember { mutableStateOf(false) }
@@ -158,7 +160,7 @@ fun SettingsScreen(
                     icon = Icons.Default.DarkMode,
                     iconTint = Color(0xFF5C6BC0),
                     title = "Chủ đề",
-                    subtitle = selectedTheme.label,
+                    subtitle = selectedTheme.label(),
                     onClick = { showThemeDialog = true }
                 )
                 SettingsDivider()
@@ -247,7 +249,7 @@ fun SettingsScreen(
                     icon = Icons.Default.Info,
                     iconTint = Color(0xFF78909C),
                     title = "Phiên bản",
-                    subtitle = "1.0.0 (MVP)",
+                    subtitle = "1.1.0",
                     showChevron = false,
                     onClick = {}
                 )
@@ -264,12 +266,12 @@ fun SettingsScreen(
             title = { Text("Chọn chủ đề") },
             text = {
                 Column {
-                    ThemeMode.entries.forEach { theme ->
+                    AppTheme.entries.forEach { theme ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    selectedTheme = theme
+                                    viewModel.setTheme(theme)
                                     showThemeDialog = false
                                 }
                                 .padding(vertical = 4.dp),
@@ -278,11 +280,11 @@ fun SettingsScreen(
                             RadioButton(
                                 selected = selectedTheme == theme,
                                 onClick = {
-                                    selectedTheme = theme
+                                    viewModel.setTheme(theme)
                                     showThemeDialog = false
                                 }
                             )
-                            Text(theme.label)
+                            Text(theme.label())
                         }
                     }
                 }
