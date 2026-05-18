@@ -20,8 +20,8 @@ class HabitRepository @Inject constructor(
     private val habitDao: HabitDao,
     private val habitLogDao: HabitLogDao
 ) {
-    fun getAllActiveHabits(): Flow<List<Habit>> =
-        habitDao.getAllActiveHabits().map { list -> list.map { it.toDomain() } }
+    fun getAllActiveHabits(profileId: Int = 1): Flow<List<Habit>> =
+        habitDao.getAllActiveHabits(profileId).map { list -> list.map { it.toDomain() } }
 
     fun getHabitById(id: Int): Flow<Habit?> =
         habitDao.getHabitById(id).map { it?.toDomain() }
@@ -110,8 +110,8 @@ class HabitRepository @Inject constructor(
         return logCount.toFloat() / days
     }
 
-    suspend fun isDuplicateName(name: String, excludeId: Int = 0): Boolean =
-        habitDao.countByName(name.trim(), excludeId) > 0
+    suspend fun isDuplicateName(name: String, excludeId: Int = 0, profileId: Int = 1): Boolean =
+        habitDao.countByName(name.trim(), excludeId, profileId) > 0
 
     suspend fun getAllHabitsForExport(): List<Habit> =
         habitDao.getAllHabitsOnce().map { it.toDomain() }
@@ -144,7 +144,8 @@ class HabitRepository @Inject constructor(
             targetDays = targetDaysList,
             reminderTime = reminderTime,
             isArchived = isArchived,
-            createdAt = createdAt
+            createdAt = createdAt,
+            profileId = profileId
         )
     }
 
@@ -163,7 +164,8 @@ class HabitRepository @Inject constructor(
             targetDays = targetDaysJson,
             reminderTime = reminderTime,
             isArchived = isArchived,
-            createdAt = createdAt
+            createdAt = createdAt,
+            profileId = profileId
         )
     }
 

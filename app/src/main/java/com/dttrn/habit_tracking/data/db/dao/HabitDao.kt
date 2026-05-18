@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface HabitDao {
 
-    @Query("SELECT * FROM habits WHERE isArchived = 0 ORDER BY createdAt ASC")
-    fun getAllActiveHabits(): Flow<List<HabitEntity>>
+    @Query("SELECT * FROM habits WHERE isArchived = 0 AND profileId = :profileId ORDER BY createdAt ASC")
+    fun getAllActiveHabits(profileId: Int = 1): Flow<List<HabitEntity>>
 
-    @Query("SELECT * FROM habits WHERE isArchived = 1 ORDER BY createdAt DESC")
-    fun getArchivedHabits(): Flow<List<HabitEntity>>
+    @Query("SELECT * FROM habits WHERE isArchived = 1 AND profileId = :profileId ORDER BY createdAt DESC")
+    fun getArchivedHabits(profileId: Int = 1): Flow<List<HabitEntity>>
 
     @Query("SELECT * FROM habits WHERE id = :id")
     fun getHabitById(id: Int): Flow<HabitEntity?>
@@ -39,11 +39,11 @@ interface HabitDao {
     @Query("UPDATE habits SET isArchived = :archived WHERE id = :id")
     suspend fun setArchived(id: Int, archived: Boolean)
 
-    @Query("SELECT COUNT(*) FROM habits WHERE name = :name AND isArchived = 0 AND id != :excludeId")
-    suspend fun countByName(name: String, excludeId: Int = 0): Int
+    @Query("SELECT COUNT(*) FROM habits WHERE name = :name AND isArchived = 0 AND id != :excludeId AND profileId = :profileId")
+    suspend fun countByName(name: String, excludeId: Int = 0, profileId: Int = 1): Int
 
-    @Query("SELECT COUNT(*) FROM habits WHERE isArchived = 0")
-    fun getActiveHabitCount(): Flow<Int>
+    @Query("SELECT COUNT(*) FROM habits WHERE isArchived = 0 AND profileId = :profileId")
+    fun getActiveHabitCount(profileId: Int = 1): Flow<Int>
 
     @Query("SELECT * FROM habits ORDER BY createdAt ASC")
     suspend fun getAllHabitsOnce(): List<HabitEntity>

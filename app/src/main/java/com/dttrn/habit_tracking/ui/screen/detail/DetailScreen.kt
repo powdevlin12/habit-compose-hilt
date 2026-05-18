@@ -21,6 +21,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Archive
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dttrn.habit_tracking.ui.components.HabitHeatMap
+import com.dttrn.habit_tracking.ui.components.StreakShareHelper
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +63,7 @@ fun DetailScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showDeleteDialog by remember { mutableStateOf(false) }
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     LaunchedEffect(habitId) {
         viewModel.loadHabit(habitId)
@@ -112,6 +115,19 @@ fun DetailScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = {
+                        StreakShareHelper.createAndShareStreakCard(
+                            context = context,
+                            habitName = habit.name,
+                            habitEmoji = habit.iconEmoji,
+                            habitColorHex = habit.colorHex,
+                            currentStreak = uiState.currentStreak,
+                            longestStreak = uiState.longestStreak,
+                            totalLogs = uiState.totalLogs
+                        )
+                    }) {
+                        Icon(Icons.Default.Share, contentDescription = "Chia sẻ streak")
+                    }
                     IconButton(onClick = onNavigateToEdit) {
                         Icon(Icons.Default.Edit, contentDescription = "Sửa")
                     }

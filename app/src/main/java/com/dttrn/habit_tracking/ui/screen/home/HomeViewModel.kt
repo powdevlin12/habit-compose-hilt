@@ -2,12 +2,14 @@ package com.dttrn.habit_tracking.ui.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dttrn.habit_tracking.data.preferences.ProfilePreferences
 import com.dttrn.habit_tracking.data.repository.HabitRepository
 import com.dttrn.habit_tracking.domain.model.Habit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -30,7 +32,8 @@ data class HomeUiState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: HabitRepository
+    private val repository: HabitRepository,
+    private val profilePreferences: ProfilePreferences
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -40,11 +43,12 @@ class HomeViewModel @Inject constructor(
         observeHabits()
     }
 
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun observeHabits() {
         viewModelScope.launch {
-            repository.getAllActiveHabits().collect { habits ->
-                refreshHabitsState(habits)
-            }
+            profilePreferences.activeProfileId
+                .flatMapLatest { profileId -> repository.getAllActiveHabits(profileId) }
+                .collect { habits -> refreshHabitsState(habits) }
         }
     }
 

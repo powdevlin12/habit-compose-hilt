@@ -15,5 +15,7 @@ data class HabitEntity(
     val targetDays: String? = null,
     val reminderTime: String? = null,
     val isArchived: Boolean = false,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    /** ID của profile sở hữu thói quen này. Default = 1 (profile đầu tiên). */
+    val profileId: Int = 1
 )

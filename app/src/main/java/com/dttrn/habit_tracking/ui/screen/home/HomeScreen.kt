@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
@@ -67,6 +69,8 @@ fun HomeScreen(
     onNavigateToEditHabit: (Int) -> Unit,
     onNavigateToStatistics: () -> Unit,
     onNavigateToSettings: () -> Unit,
+    onNavigateToChallenge: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -157,11 +161,29 @@ fun HomeScreen(
                     }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Outlined.Settings, contentDescription = "Cài đặt") },
-                    label = { Text("Cài đặt") },
+                    icon = { Icon(Icons.Default.EmojiEvents, contentDescription = "Thách thức") },
+                    label = { Text("Thách thức") },
                     selected = selectedNav == 2,
                     onClick = {
                         selectedNav = 2
+                        onNavigateToChallenge()
+                    }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Hồ sơ") },
+                    label = { Text("Hồ sơ") },
+                    selected = selectedNav == 3,
+                    onClick = {
+                        selectedNav = 3
+                        onNavigateToProfile()
+                    }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Outlined.Settings, contentDescription = "Cài đặt") },
+                    label = { Text("Cài đặt") },
+                    selected = selectedNav == 4,
+                    onClick = {
+                        selectedNav = 4
                         onNavigateToSettings()
                     }
                 )

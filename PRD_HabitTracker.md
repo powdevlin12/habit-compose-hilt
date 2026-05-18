@@ -384,10 +384,10 @@ Khai báo trong `AndroidManifest.xml`:
 
 ### v1.2 — Tương lai
 
-- [ ] Backup lên Google Drive
-- [ ] Chia sẻ streak (screenshot đẹp)
-- [ ] Thách thức (30-day challenge mode)
-- [ ] Nhiều profile
+- [ ] Backup lên Google Drive *(bỏ qua theo yêu cầu)*
+- [x] Chia sẻ streak (screenshot đẹp)
+- [x] Thách thức (30-day challenge mode)
+- [x] Nhiều profile
 
 ---
 

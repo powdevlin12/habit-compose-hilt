@@ -7,9 +7,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.dttrn.habit_tracking.ui.screen.add_edit.AddEditScreen
+import com.dttrn.habit_tracking.ui.screen.challenge.ChallengeScreen
 import com.dttrn.habit_tracking.ui.screen.detail.DetailScreen
 import com.dttrn.habit_tracking.ui.screen.home.HomeScreen
 import com.dttrn.habit_tracking.ui.screen.notification.ReminderScreen
+import com.dttrn.habit_tracking.ui.screen.profile.ProfileScreen
 import com.dttrn.habit_tracking.ui.screen.settings.SettingsScreen
 import com.dttrn.habit_tracking.ui.screen.statistics.StatisticsScreen
 
@@ -29,7 +31,9 @@ fun HabitNavGraph(navController: NavHostController) {
                     navController.navigate(Screen.EditHabit.createRoute(habitId))
                 },
                 onNavigateToStatistics = { navController.navigate(Screen.Statistics.route) },
-                onNavigateToSettings = { navController.navigate(Screen.Settings.route) }
+                onNavigateToSettings = { navController.navigate(Screen.Settings.route) },
+                onNavigateToChallenge = { navController.navigate(Screen.Challenge.route) },
+                onNavigateToProfile = { navController.navigate(Screen.Profile.route) }
             )
         }
 
@@ -74,12 +78,24 @@ fun HabitNavGraph(navController: NavHostController) {
         composable(Screen.Settings.route) {
             SettingsScreen(
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateNotification={navController.navigate(Screen.Reminder.route)}
+                onNavigateNotification = { navController.navigate(Screen.Reminder.route) }
             )
         }
 
         composable(Screen.Reminder.route) {
             ReminderScreen()
+        }
+
+        composable(Screen.Challenge.route) {
+            ChallengeScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.Profile.route) {
+            ProfileScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
     }
 }

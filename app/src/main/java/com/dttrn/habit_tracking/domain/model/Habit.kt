@@ -10,7 +10,8 @@ data class Habit(
     val targetDays: List<Int> = emptyList(),
     val reminderTime: String? = null,
     val isArchived: Boolean = false,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val profileId: Int = 1
 )
 
 enum class HabitFrequency(val label: String) {

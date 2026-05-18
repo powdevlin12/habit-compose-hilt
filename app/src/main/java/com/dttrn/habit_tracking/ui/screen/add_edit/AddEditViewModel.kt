@@ -2,6 +2,7 @@ package com.dttrn.habit_tracking.ui.screen.add_edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dttrn.habit_tracking.data.preferences.ProfilePreferences
 import com.dttrn.habit_tracking.data.repository.HabitRepository
 import com.dttrn.habit_tracking.domain.model.Habit
 import com.dttrn.habit_tracking.domain.model.HabitFrequency
@@ -32,7 +33,8 @@ data class AddEditUiState(
 @HiltViewModel
 class AddEditViewModel @Inject constructor(
     private val repository: HabitRepository,
-    private val reminderScheduler: WorkManagerReminderScheduler
+    private val reminderScheduler: WorkManagerReminderScheduler,
+    private val profilePreferences: ProfilePreferences
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddEditUiState())
@@ -112,7 +114,8 @@ class AddEditViewModel @Inject constructor(
                 colorHex = state.colorHex,
                 frequency = state.frequency,
                 targetDays = if (state.frequency == HabitFrequency.CUSTOM) state.targetDays else emptyList(),
-                reminderTime = if (state.reminderEnabled) state.reminderTime else null
+                reminderTime = if (state.reminderEnabled) state.reminderTime else null,
+                profileId = profilePreferences.activeProfileId.value
             )
 
             val savedId = if (state.habitId == null) {
