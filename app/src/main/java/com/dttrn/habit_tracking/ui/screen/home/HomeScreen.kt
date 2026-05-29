@@ -21,8 +21,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.BarChart
+import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.AlertDialog
@@ -67,10 +66,9 @@ fun HomeScreen(
     onNavigateToAddHabit: () -> Unit,
     onNavigateToHabitDetail: (Int) -> Unit,
     onNavigateToEditHabit: (Int) -> Unit,
-    onNavigateToStatistics: () -> Unit,
     onNavigateToSettings: () -> Unit,
     onNavigateToChallenge: () -> Unit = {},
-    onNavigateToProfile: () -> Unit = {},
+    onNavigateToJournal: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -152,39 +150,30 @@ fun HomeScreen(
                     onClick = { selectedNav = 0 }
                 )
                 NavigationBarItem(
-                    icon = { Icon(Icons.Outlined.BarChart, contentDescription = "Thống kê") },
-                    label = { Text("Thống kê") },
+                    icon = { Icon(Icons.Outlined.Book, contentDescription = "Nhật ký") },
+                    label = { Text("Nhật ký") },
                     selected = selectedNav == 1,
                     onClick = {
                         selectedNav = 1
-                        onNavigateToStatistics()
-                    }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.EmojiEvents, contentDescription = "Thách thức") },
-                    label = { Text("Thách thức") },
-                    selected = selectedNav == 2,
-                    onClick = {
-                        selectedNav = 2
-                        onNavigateToChallenge()
-                    }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Hồ sơ") },
-                    label = { Text("Hồ sơ") },
-                    selected = selectedNav == 3,
-                    onClick = {
-                        selectedNav = 3
-                        onNavigateToProfile()
+                        onNavigateToJournal()
                     }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Outlined.Settings, contentDescription = "Cài đặt") },
                     label = { Text("Cài đặt") },
-                    selected = selectedNav == 4,
+                    selected = selectedNav == 2,
                     onClick = {
-                        selectedNav = 4
+                        selectedNav = 2
                         onNavigateToSettings()
+                    }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Default.EmojiEvents, contentDescription = "Thách thức") },
+                    label = { Text("Thách thức") },
+                    selected = selectedNav == 3,
+                    onClick = {
+                        selectedNav = 3
+                        onNavigateToChallenge()
                     }
                 )
             }

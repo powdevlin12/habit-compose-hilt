@@ -7,6 +7,7 @@ import com.dttrn.habit_tracking.data.db.dao.ChallengeDao
 import com.dttrn.habit_tracking.data.db.dao.HabitDao
 import com.dttrn.habit_tracking.data.db.dao.HabitLogDao
 import com.dttrn.habit_tracking.data.db.dao.ProfileDao
+import com.dttrn.habit_tracking.data.db.dao.JournalDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +27,7 @@ object AppModule {
             HabitDatabase::class.java,
             "habit_journey.db"
         )
-            .addMigrations(HabitDatabase.MIGRATION_1_2)
+            .addMigrations(HabitDatabase.MIGRATION_1_2, HabitDatabase.MIGRATION_2_3)
             .build()
 
     @Provides
@@ -40,4 +41,7 @@ object AppModule {
 
     @Provides
     fun provideChallengeDao(db: HabitDatabase): ChallengeDao = db.challengeDao()
+
+    @Provides
+    fun provideJournalDao(db: HabitDatabase): JournalDao = db.journalDao()
 }

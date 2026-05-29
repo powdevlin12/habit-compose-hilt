@@ -26,6 +26,8 @@ import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -69,6 +71,8 @@ private fun AppTheme.label() = when (this) {
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
     onNavigateNotification: () -> Unit,
+    onNavigateToStatistics: () -> Unit = {},
+    onNavigateToProfile: () -> Unit = {},
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -238,6 +242,27 @@ fun SettingsScreen(
                     subtitle = "Xoá tất cả thói quen và lịch sử",
                     titleColor = MaterialTheme.colorScheme.error,
                     onClick = { showDeleteDataDialog = true }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+            SettingsSectionHeader("Khác")
+
+            SettingsCard {
+                SettingsItem(
+                    icon = Icons.Outlined.BarChart,
+                    iconTint = Color(0xFF5C6BC0),
+                    title = "Thống kê",
+                    subtitle = "Xem số liệu và biểu đồ thói quen",
+                    onClick = onNavigateToStatistics
+                )
+                SettingsDivider()
+                SettingsItem(
+                    icon = Icons.Default.Person,
+                    iconTint = Color(0xFF66BB6A),
+                    title = "Hồ sơ",
+                    subtitle = "Quản lý hồ sơ người dùng",
+                    onClick = onNavigateToProfile
                 )
             }
 

@@ -14,4 +14,8 @@ sealed class Screen(val route: String) {
     data object Reminder : Screen("reminder_screen")
     data object Challenge : Screen("challenge")
     data object Profile : Screen("profile")
+    data object Journal : Screen("journal")
+    data object JournalDetail : Screen("journal_detail/{date}") {
+        fun createRoute(date: String) = "journal_detail/$date"
+    }
 }

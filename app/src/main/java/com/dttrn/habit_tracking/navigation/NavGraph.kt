@@ -14,6 +14,8 @@ import com.dttrn.habit_tracking.ui.screen.notification.ReminderScreen
 import com.dttrn.habit_tracking.ui.screen.profile.ProfileScreen
 import com.dttrn.habit_tracking.ui.screen.settings.SettingsScreen
 import com.dttrn.habit_tracking.ui.screen.statistics.StatisticsScreen
+import com.dttrn.habit_tracking.ui.screen.journal.JournalScreen
+import com.dttrn.habit_tracking.ui.screen.journal.JournalDetailScreen
 
 @Composable
 fun HabitNavGraph(navController: NavHostController) {
@@ -30,10 +32,9 @@ fun HabitNavGraph(navController: NavHostController) {
                 onNavigateToEditHabit = { habitId ->
                     navController.navigate(Screen.EditHabit.createRoute(habitId))
                 },
-                onNavigateToStatistics = { navController.navigate(Screen.Statistics.route) },
                 onNavigateToSettings = { navController.navigate(Screen.Settings.route) },
                 onNavigateToChallenge = { navController.navigate(Screen.Challenge.route) },
-                onNavigateToProfile = { navController.navigate(Screen.Profile.route) }
+                onNavigateToJournal = { navController.navigate(Screen.Journal.route) }
             )
         }
 
@@ -78,7 +79,9 @@ fun HabitNavGraph(navController: NavHostController) {
         composable(Screen.Settings.route) {
             SettingsScreen(
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateNotification = { navController.navigate(Screen.Reminder.route) }
+                onNavigateNotification = { navController.navigate(Screen.Reminder.route) },
+                onNavigateToStatistics = { navController.navigate(Screen.Statistics.route) },
+                onNavigateToProfile = { navController.navigate(Screen.Profile.route) }
             )
         }
 
@@ -94,6 +97,25 @@ fun HabitNavGraph(navController: NavHostController) {
 
         composable(Screen.Profile.route) {
             ProfileScreen(
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screen.Journal.route) {
+            JournalScreen(
+                onNavigateToDetail = { date ->
+                    navController.navigate(Screen.JournalDetail.createRoute(date))
+                }
+            )
+        }
+
+        composable(
+            route = Screen.JournalDetail.route,
+            arguments = listOf(navArgument("date") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val date = backStackEntry.arguments?.getString("date") ?: return@composable
+            JournalDetailScreen(
+                date = date,
                 onNavigateBack = { navController.popBackStack() }
             )
         }

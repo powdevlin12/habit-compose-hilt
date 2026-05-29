@@ -8,19 +8,22 @@ import com.dttrn.habit_tracking.data.db.dao.ChallengeDao
 import com.dttrn.habit_tracking.data.db.dao.HabitDao
 import com.dttrn.habit_tracking.data.db.dao.HabitLogDao
 import com.dttrn.habit_tracking.data.db.dao.ProfileDao
+import com.dttrn.habit_tracking.data.db.dao.JournalDao
 import com.dttrn.habit_tracking.data.db.entity.ChallengeEntity
 import com.dttrn.habit_tracking.data.db.entity.HabitEntity
 import com.dttrn.habit_tracking.data.db.entity.HabitLogEntity
 import com.dttrn.habit_tracking.data.db.entity.ProfileEntity
+import com.dttrn.habit_tracking.data.db.entity.JournalEntity
 
 @Database(
     entities = [
         HabitEntity::class,
         HabitLogEntity::class,
         ProfileEntity::class,
-        ChallengeEntity::class
+        ChallengeEntity::class,
+        JournalEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class HabitDatabase : RoomDatabase() {
@@ -28,6 +31,7 @@ abstract class HabitDatabase : RoomDatabase() {
     abstract fun habitLogDao(): HabitLogDao
     abstract fun profileDao(): ProfileDao
     abstract fun challengeDao(): ChallengeDao
+    abstract fun journalDao(): JournalDao
 
     companion object {
         /**
@@ -73,6 +77,24 @@ abstract class HabitDatabase : RoomDatabase() {
                         isCompleted INTEGER NOT NULL DEFAULT 0,
                         createdAt INTEGER NOT NULL DEFAULT 0,
                         profileId INTEGER NOT NULL DEFAULT 1
+                    )
+                    """.trimIndent()
+                )
+            }
+        }
+
+        /**
+         * Migration 2→3:
+         * - Thêm bảng journals
+         */
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS journals (
+                        date TEXT PRIMARY KEY NOT NULL,
+                        content TEXT NOT NULL,
+                        updatedAt INTEGER NOT NULL
                     )
                     """.trimIndent()
                 )
